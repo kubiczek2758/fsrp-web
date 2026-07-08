@@ -12,13 +12,20 @@
 
   <!-- Loader -->
   <div id="loader">
-    <div class="loader-ring"></div>
-    <img src="logo.png" alt="FSRP Logo" class="loader-logo" />
+    <div class="loader-particles" id="loaderParticles"></div>
+    <div class="loader-aura"></div>
+    <div class="loader-ring ring-outer"></div>
+    <div class="loader-ring ring-mid"></div>
+    <div class="loader-ring ring-inner"></div>
+    <div class="loader-logo-wrap">
+      <img src="logo.png" alt="FSRP Logo" class="loader-logo" />
+    </div>
     <div class="loader-text">FLORIDA STATE ROLEPLAY</div>
     <div class="loader-bar">
-      <div class="loader-progress"></div>
+      <div class="loader-progress" id="loaderProgress"></div>
     </div>
-    <div class="loader-status">Loading experience...</div>
+    <div class="loader-percent" id="loaderPercent">0%</div>
+    <div class="loader-status">Initializing experience...</div>
   </div>
 
   <!-- Navigation -->

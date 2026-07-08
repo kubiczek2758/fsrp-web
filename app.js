@@ -24,11 +24,53 @@
     const loader = $('#loader');
     if (!loader) return;
 
+    generateLoaderParticles();
+    animateLoaderPercent();
+
     window.addEventListener('load', () => {
+      const progress = $('#loaderProgress');
+      const percent = $('#loaderPercent');
+      const status = loader.querySelector('.loader-status');
+
+      if (progress) progress.style.width = '100%';
+      if (percent) percent.textContent = '100%';
+      if (status) status.textContent = 'Welcome to Florida State Roleplay';
+
       setTimeout(() => {
         loader.classList.add('hidden');
-      }, 1400);
+      }, 1600);
     });
+  }
+
+  function generateLoaderParticles() {
+    const container = $('#loaderParticles');
+    if (!container) return;
+
+    for (let i = 0; i < 40; i++) {
+      const p = document.createElement('span');
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      p.style.width = Math.random() * 4 + 2 + 'px';
+      p.style.height = p.style.width;
+      p.style.animationDuration = Math.random() * 3 + 2 + 's';
+      p.style.animationDelay = Math.random() * 2 + 's';
+      container.appendChild(p);
+    }
+  }
+
+  function animateLoaderPercent() {
+    const percent = $('#loaderPercent');
+    if (!percent) return;
+
+    let value = 0;
+    const interval = setInterval(() => {
+      value += Math.floor(Math.random() * 4) + 1;
+      if (value >= 99) {
+        value = 99;
+        clearInterval(interval);
+      }
+      percent.textContent = value + '%';
+    }, 35);
   }
 
   // ========================
