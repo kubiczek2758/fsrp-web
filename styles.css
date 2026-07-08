@@ -986,6 +986,23 @@ section {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.app-link {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--green-600), var(--green-700));
+  color: white;
+  padding: 0.65rem 1.75rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.25s;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+}
+
+.app-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.45);
+}
+
 /* ========================
    RULES
    ======================== */
