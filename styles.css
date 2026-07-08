@@ -824,6 +824,10 @@ section {
   background: linear-gradient(135deg, var(--green-500), var(--green-600));
 }
 
+.owner-role.role-assistant {
+  background: linear-gradient(135deg, var(--green-600), var(--green-700));
+}
+
 /* ========================
    DEPARTMENTS
    ======================== */
