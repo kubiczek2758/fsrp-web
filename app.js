@@ -1,7 +1,8 @@
 /**
  * Florida State Roleplay - Website Application
  * Features: loader, animations, scroll effects, F8 admin panel,
- * content editing with localStorage persistence, import/export, news system.
+ * content editing with localStorage persistence, import/export,
+ * cloud sync via GitHub Gist, news system.
  */
 
 (function () {
@@ -13,6 +14,7 @@
   const ADMIN_PASSWORD = 'H&l9Jo0';
   const STORAGE_KEY = 'fsrp_site_config';
   const NEWS_KEY = 'fsrp_site_news';
+  const CLOUD_KEY = 'fsrp_cloud_settings';
   const DEFAULT_DISCORD = 'https://discord.gg/pcP85r22KW';
 
   // Default configuration used on first load or after reset
@@ -55,6 +57,7 @@
 
   let config = loadConfig();
   let newsList = loadNews();
+  let cloudSettings = loadCloudSettings();
   let adminLoggedIn = false;
   let editingNewsId = null;
 
@@ -101,6 +104,352 @@
     } catch (e) {
       console.error('Failed to save news to localStorage:', e);
       showToast('Failed to save news.', true);
+    }
+  }
+
+  function loadCloudSettings() {
+    try {
+      const saved = localStorage.getItem(CLOUD_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error('Failed to load cloud settings:', e);
+    }
+    return { provider: 'github', token: '', gistId: '', backendUrl: '', backendToken: '' };
+  }
+
+  function saveCloudSettings() {
+    try {
+      localStorage.setItem(CLOUD_KEY, JSON.stringify(cloudSettings));
+    } catch (e) {
+      console.error('Failed to save cloud settings:', e);
+    }
+  }
+
+  // ========================
+  // Cloud Sync (GitHub Gist)
+  // ========================
+  async function createGist(token) {
+    const payload = {
+      description: 'Florida State Roleplay - Website Data',
+      public: false,
+      files: {
+        'fsrp-data.json': {
+          content: JSON.stringify(buildCloudPayload(), null, 2)
+        }
+      }
+    };
+
+    const response = await fetch('https://api.github.com/gists', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to create gist');
+    }
+
+    return await response.json();
+  }
+
+  async function updateGist(token, gistId) {
+    const payload = {
+      description: 'Florida State Roleplay - Website Data',
+      files: {
+        'fsrp-data.json': {
+          content: JSON.stringify(buildCloudPayload(), null, 2)
+        }
+      }
+    };
+
+    const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to update gist');
+    }
+
+    return await response.json();
+  }
+
+  async function fetchGist(token, gistId) {
+    const url = token
+      ? `https://api.github.com/gists/${gistId}`
+      : `https://api.github.com/gists/${gistId}`;
+
+    const headers = {
+      'Accept': 'application/vnd.github.v3+json'
+    };
+    if (token) headers['Authorization'] = `token ${token}`;
+
+    const response = await fetch(url, { headers });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to fetch gist');
+    }
+
+    return await response.json();
+  }
+
+  function buildCloudPayload() {
+    return {
+      version: 1,
+      updatedAt: new Date().toISOString(),
+      config: config,
+      news: newsList
+    };
+  }
+
+  async function saveToCloud() {
+    if (cloudSettings.provider === 'backend') {
+      if (!cloudSettings.backendUrl) {
+        showToast('Please enter a backend URL first.', true);
+        return;
+      }
+      try {
+        const response = await fetch(cloudSettings.backendUrl, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${cloudSettings.backendToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(buildCloudPayload())
+        });
+        if (!response.ok) throw new Error((await response.json()).error || 'Backend error');
+        showToast('Saved to backend successfully.');
+        updateCloudStatus('connected', 'Synced to backend');
+      } catch (e) {
+        console.error('Backend save failed:', e);
+        showToast('Backend save failed: ' + e.message, true);
+        updateCloudStatus('error', 'Sync failed');
+      }
+      return;
+    }
+
+    if (!cloudSettings.token) {
+      showToast('Please enter a GitHub token first.', true);
+      return;
+    }
+
+    try {
+      if (cloudSettings.gistId) {
+        await updateGist(cloudSettings.token, cloudSettings.gistId);
+        showToast('Saved to cloud successfully.');
+        updateCloudStatus('connected', 'Synced to cloud');
+      } else {
+        const gist = await createGist(cloudSettings.token);
+        cloudSettings.gistId = gist.id;
+        saveCloudSettings();
+        $('#gistId').value = gist.id;
+        showToast('New cloud gist created successfully.');
+        updateCloudStatus('connected', 'Connected');
+      }
+    } catch (e) {
+      console.error('Cloud save failed:', e);
+      showToast('Cloud save failed: ' + e.message, true);
+      updateCloudStatus('error', 'Sync failed');
+    }
+  }
+
+  async function loadFromCloud(silent = false) {
+    if (cloudSettings.provider === 'backend') {
+      if (!cloudSettings.backendUrl) {
+        if (!silent) showToast('Please enter a backend URL first.', true);
+        return;
+      }
+      try {
+        const response = await fetch(cloudSettings.backendUrl, {
+          headers: cloudSettings.backendToken
+            ? { 'Authorization': `Bearer ${cloudSettings.backendToken}` }
+            : {}
+        });
+        if (!response.ok) throw new Error('Backend error');
+        const data = await response.json();
+        applyCloudData(data);
+        if (!silent) showToast('Loaded from backend successfully.');
+        updateCloudStatus('connected', 'Connected to backend');
+      } catch (e) {
+        console.error('Backend load failed:', e);
+        if (!silent) showToast('Backend load failed: ' + e.message, true);
+        updateCloudStatus('error', 'Load failed');
+      }
+      return;
+    }
+
+    if (!cloudSettings.gistId) {
+      if (!silent) showToast('Please enter a Gist ID first.', true);
+      return;
+    }
+
+    try {
+      const gist = await fetchGist(cloudSettings.token, cloudSettings.gistId);
+      const file = gist.files['fsrp-data.json'];
+      if (!file) throw new Error('Gist does not contain fsrp-data.json');
+      const data = JSON.parse(file.content);
+      applyCloudData(data);
+      if (!silent) showToast('Loaded from cloud successfully.');
+      updateCloudStatus('connected', 'Connected');
+    } catch (e) {
+      console.error('Cloud load failed:', e);
+      if (!silent) showToast('Cloud load failed: ' + e.message, true);
+      updateCloudStatus('error', 'Load failed');
+    }
+  }
+
+  function applyCloudData(data) {
+    if (data.config) {
+      config = { ...defaultConfig, ...data.config };
+      saveConfig();
+    }
+    if (Array.isArray(data.news)) {
+      newsList = data.news;
+      saveNews();
+    }
+    applyConfig();
+    renderNewsPage();
+    fillAdminForm();
+    renderAdminNewsList();
+  }
+
+  async function initCloudSync() {
+    if (cloudSettings.provider === 'github' && cloudSettings.gistId) {
+      updateCloudStatus('connected', 'Loading from cloud...');
+      await loadFromCloud(true);
+    } else if (cloudSettings.provider === 'backend' && cloudSettings.backendUrl) {
+      updateCloudStatus('connected', 'Loading from backend...');
+      await loadFromCloud(true);
+    }
+  }
+
+  function updateCloudStatus(type, text) {
+    const statusEl = $('#cloudStatus');
+    const textEl = $('#cloudStatusText');
+    if (!statusEl || !textEl) return;
+
+    statusEl.className = 'cloud-status';
+    if (type) statusEl.classList.add(type);
+    textEl.textContent = text;
+  }
+
+  function initCloudAdmin() {
+    const tokenEl = $('#githubToken');
+    const gistIdEl = $('#gistId');
+    const createBtn = $('#createGistBtn');
+    const loadBtn = $('#loadFromCloudBtn');
+    const saveBtn = $('#saveToCloudBtn');
+
+    if (!tokenEl || !gistIdEl) return;
+
+    const providerEl = $('#cloudProvider');
+    const githubSettings = $('#githubSettings');
+    const backendSettings = $('#backendSettings');
+    const backendUrlEl = $('#backendUrl');
+    const backendTokenEl = $('#backendToken');
+
+    providerEl.value = cloudSettings.provider || 'github';
+    tokenEl.value = cloudSettings.token || '';
+    gistIdEl.value = cloudSettings.gistId || '';
+    if (backendUrlEl) backendUrlEl.value = cloudSettings.backendUrl || '';
+    if (backendTokenEl) backendTokenEl.value = cloudSettings.backendToken || '';
+
+    function updateProviderUI() {
+      const isGitHub = providerEl.value === 'github';
+      githubSettings.style.display = isGitHub ? 'block' : 'none';
+      backendSettings.style.display = isGitHub ? 'none' : 'block';
+      if (createBtn) createBtn.style.display = isGitHub ? 'inline-flex' : 'none';
+      if (isGitHub && cloudSettings.gistId) {
+        updateCloudStatus('connected', 'Connected');
+      } else if (!isGitHub && cloudSettings.backendUrl) {
+        updateCloudStatus('connected', 'Connected to backend');
+      } else {
+        updateCloudStatus('', 'Not configured');
+      }
+    }
+
+    updateProviderUI();
+
+    providerEl.addEventListener('change', () => {
+      cloudSettings.provider = providerEl.value;
+      saveCloudSettings();
+      updateProviderUI();
+    });
+
+    tokenEl.addEventListener('input', () => {
+      cloudSettings.token = tokenEl.value.trim();
+      saveCloudSettings();
+    });
+
+    gistIdEl.addEventListener('input', () => {
+      cloudSettings.gistId = gistIdEl.value.trim();
+      saveCloudSettings();
+      updateCloudStatus(cloudSettings.gistId ? 'connected' : '', cloudSettings.gistId ? 'Connected' : 'Not configured');
+    });
+
+    if (backendUrlEl) {
+      backendUrlEl.addEventListener('input', () => {
+        cloudSettings.backendUrl = backendUrlEl.value.trim();
+        saveCloudSettings();
+      });
+    }
+
+    if (backendTokenEl) {
+      backendTokenEl.addEventListener('input', () => {
+        cloudSettings.backendToken = backendTokenEl.value.trim();
+        saveCloudSettings();
+      });
+    }
+
+    if (createBtn) {
+      createBtn.addEventListener('click', async () => {
+        if (!cloudSettings.token) {
+          showToast('Please enter a GitHub token first.', true);
+          return;
+        }
+        createBtn.textContent = 'Creating...';
+        try {
+          const gist = await createGist(cloudSettings.token);
+          cloudSettings.gistId = gist.id;
+          saveCloudSettings();
+          gistIdEl.value = gist.id;
+          updateCloudStatus('connected', 'Connected');
+          showToast('New cloud gist created successfully.');
+        } catch (e) {
+          showToast('Failed to create gist: ' + e.message, true);
+          updateCloudStatus('error', 'Create failed');
+        } finally {
+          createBtn.textContent = 'Create New Gist';
+        }
+      });
+    }
+
+    if (loadBtn) {
+      loadBtn.addEventListener('click', async () => {
+        loadBtn.textContent = 'Loading...';
+        await loadFromCloud();
+        loadBtn.textContent = 'Load from Cloud';
+      });
+    }
+
+    if (saveBtn) {
+      saveBtn.addEventListener('click', async () => {
+        saveBtn.textContent = 'Saving...';
+        await saveToCloud();
+        saveBtn.textContent = 'Save to Cloud';
+      });
     }
   }
 
@@ -198,10 +547,9 @@
   // Content Rendering
   // ========================
   function applyConfig() {
-    // Text content
     $$('[data-editable]').forEach((el) => {
       const key = el.dataset.editable;
-      if (key === 'rules') return; // handled separately
+      if (key === 'rules') return;
       if (config[key] !== undefined) {
         if (el.tagName === 'A') {
           el.textContent = config[key];
@@ -211,13 +559,8 @@
       }
     });
 
-    // Discord links
     updateDiscordLinks();
-
-    // Department links
     updateDepartmentLinks();
-
-    // Rules
     renderRules();
   }
 
@@ -302,7 +645,6 @@
     container.innerHTML = '';
     container.appendChild(grid);
 
-    // Trigger reveal animations
     const reveals = $$('.news-card.reveal');
     const observer = new IntersectionObserver(
       (entries) => {
@@ -366,6 +708,7 @@
       dashboard.style.display = 'flex';
       fillAdminForm();
       renderAdminNewsList();
+      initCloudAdmin();
       updateExportField();
     }
 
@@ -382,7 +725,6 @@
       }
     }
 
-    // F8 key listener
     document.addEventListener('keydown', (e) => {
       if (e.key === 'F8') {
         e.preventDefault();
@@ -392,7 +734,6 @@
           openAdmin();
         }
       }
-      // Close on Escape
       if (e.key === 'Escape' && overlay.classList.contains('active')) {
         closeAdmin();
       }
@@ -425,24 +766,18 @@
   }
 
   function fillAdminForm() {
-    // General
-    const serverNameEl = $('#editServerName');
-    if (serverNameEl) serverNameEl.value = config.serverName;
+    const setValue = (id, value) => {
+      const el = $('#' + id);
+      if (el) el.value = value;
+    };
 
-    const serverSubtitleEl = $('#editServerSubtitle');
-    if (serverSubtitleEl) serverSubtitleEl.value = config.serverSubtitle;
+    setValue('editServerName', config.serverName);
+    setValue('editServerSubtitle', config.serverSubtitle);
+    setValue('editDiscordLink', config.discordLink);
+    setValue('editDiscordText', config.discordText);
+    setValue('editDiscordButton', config.discordButton);
 
-    const discordLinkEl = $('#editDiscordLink');
-    if (discordLinkEl) discordLinkEl.value = config.discordLink;
-
-    const discordTextEl = $('#editDiscordText');
-    if (discordTextEl) discordTextEl.value = config.discordText;
-
-    const discordButtonEl = $('#editDiscordButton');
-    if (discordButtonEl) discordButtonEl.value = config.discordButton;
-
-    // Departments
-    const fields = [
+    const deptFields = [
       ['editDeptFloridaFireDesc', 'dept-florida-fire-desc'],
       ['editDeptFloridaFireLink', 'dept-florida-fire-link'],
       ['editDeptFbiDesc', 'dept-fbi-desc'],
@@ -454,29 +789,18 @@
       ['editDeptNpsDesc', 'dept-nps-desc'],
       ['editDeptNpsLink', 'dept-nps-link']
     ];
+    deptFields.forEach(([id, key]) => setValue(id, config[key]));
 
-    fields.forEach(([id, key]) => {
-      const el = $('#' + id);
-      if (el) el.value = config[key];
-    });
+    setValue('editRules', Array.isArray(config.rules) ? config.rules.join('\n') : '');
 
-    // Rules
-    const editRules = $('#editRules');
-    if (editRules) editRules.value = Array.isArray(config.rules) ? config.rules.join('\n') : '';
-
-    // Applications
     const appFields = [
       ['editAppStaffDesc', 'app-staff-desc'],
       ['editAppStaffStatus', 'app-staff-status'],
       ['editAppBanDesc', 'app-ban-desc'],
       ['editAppBanStatus', 'app-ban-status']
     ];
-    appFields.forEach(([id, key]) => {
-      const el = $('#' + id);
-      if (el) el.value = config[key];
-    });
+    appFields.forEach(([id, key]) => setValue(id, config[key]));
 
-    // About / Owners tab
     const aboutFields = [
       ['editAboutSubtitle', 'aboutSubtitle'],
       ['editAboutRp', 'aboutRp'],
@@ -484,10 +808,7 @@
       ['editAboutCommunity', 'aboutCommunity'],
       ['editAboutWorld', 'aboutWorld']
     ];
-    aboutFields.forEach(([id, key]) => {
-      const el = $('#' + id);
-      if (el) el.value = config[key];
-    });
+    aboutFields.forEach(([id, key]) => setValue(id, config[key]));
 
     updateExportField();
   }
@@ -495,7 +816,7 @@
   function updateExportField() {
     const field = $('#dataExport');
     if (field) {
-      field.value = JSON.stringify(config, null, 2);
+      field.value = JSON.stringify({ config, news: newsList }, null, 2);
     }
   }
 
@@ -503,15 +824,13 @@
     const saveBtn = $('#saveAdminBtn');
     if (!saveBtn) return;
 
-    saveBtn.addEventListener('click', () => {
-      // General
+    saveBtn.addEventListener('click', async () => {
       config.serverName = $('#editServerName').value.trim() || defaultConfig.serverName;
       config.serverSubtitle = $('#editServerSubtitle').value.trim() || defaultConfig.serverSubtitle;
       config.discordLink = $('#editDiscordLink').value.trim() || DEFAULT_DISCORD;
       config.discordText = $('#editDiscordText').value.trim() || defaultConfig.discordText;
       config.discordButton = $('#editDiscordButton').value.trim() || defaultConfig.discordButton;
 
-      // Departments
       config['dept-florida-fire-desc'] = $('#editDeptFloridaFireDesc').value.trim() || defaultConfig['dept-florida-fire-desc'];
       config['dept-florida-fire-link'] = $('#editDeptFloridaFireLink').value.trim() || defaultConfig['dept-florida-fire-link'];
       config['dept-fbi-desc'] = $('#editDeptFbiDesc').value.trim() || defaultConfig['dept-fbi-desc'];
@@ -523,17 +842,14 @@
       config['dept-nps-desc'] = $('#editDeptNpsDesc').value.trim() || defaultConfig['dept-nps-desc'];
       config['dept-nps-link'] = $('#editDeptNpsLink').value.trim() || defaultConfig['dept-nps-link'];
 
-      // Rules
       const rulesRaw = $('#editRules').value.split('\n').map((r) => r.trim()).filter(Boolean);
       config.rules = rulesRaw.length ? rulesRaw : [...defaultConfig.rules];
 
-      // Applications
       config['app-staff-desc'] = $('#editAppStaffDesc').value.trim() || defaultConfig['app-staff-desc'];
       config['app-staff-status'] = $('#editAppStaffStatus').value.trim() || defaultConfig['app-staff-status'];
       config['app-ban-desc'] = $('#editAppBanDesc').value.trim() || defaultConfig['app-ban-desc'];
       config['app-ban-status'] = $('#editAppBanStatus').value.trim() || defaultConfig['app-ban-status'];
 
-      // About
       config.aboutSubtitle = $('#editAboutSubtitle').value.trim() || defaultConfig.aboutSubtitle;
       config.aboutRp = $('#editAboutRp').value.trim() || defaultConfig.aboutRp;
       config.aboutServices = $('#editAboutServices').value.trim() || defaultConfig.aboutServices;
@@ -543,10 +859,14 @@
       saveConfig();
       applyConfig();
       updateExportField();
-      showToast('Changes saved successfully.');
+
+      if (cloudSettings.gistId && cloudSettings.token) {
+        await saveToCloud();
+      } else {
+        showToast('Changes saved locally.');
+      }
     });
 
-    // Copy JSON
     const copyBtn = $('#copyConfigBtn');
     if (copyBtn) {
       copyBtn.addEventListener('click', async () => {
@@ -559,7 +879,6 @@
       });
     }
 
-    // Import JSON
     const importBtn = $('#importConfigBtn');
     if (importBtn) {
       importBtn.addEventListener('click', () => {
@@ -570,10 +889,14 @@
         }
         try {
           const imported = JSON.parse(raw);
-          config = { ...defaultConfig, ...imported };
+          if (imported.config) config = { ...defaultConfig, ...imported.config };
+          if (Array.isArray(imported.news)) newsList = imported.news;
           saveConfig();
+          saveNews();
           applyConfig();
           fillAdminForm();
+          renderAdminNewsList();
+          renderNewsPage();
           $('#dataImport').value = '';
           showToast('Configuration imported successfully.');
         } catch (e) {
@@ -582,15 +905,18 @@
       });
     }
 
-    // Reset to default
     const resetBtn = $('#resetConfigBtn');
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
         if (confirm('Are you sure you want to reset all settings to default? This cannot be undone.')) {
           config = { ...defaultConfig };
+          newsList = [];
           saveConfig();
+          saveNews();
           applyConfig();
           fillAdminForm();
+          renderAdminNewsList();
+          renderNewsPage();
           showToast('Settings reset to default.');
         }
       });
@@ -604,7 +930,7 @@
     const addBtn = $('#addNewsBtn');
     if (!addBtn) return;
 
-    addBtn.addEventListener('click', () => {
+    addBtn.addEventListener('click', async () => {
       const title = $('#newsTitle').value.trim();
       const date = $('#newsDate').value;
       const category = $('#newsCategory').value;
@@ -638,6 +964,10 @@
       clearNewsForm();
       renderAdminNewsList();
       renderNewsPage();
+
+      if (cloudSettings.gistId && cloudSettings.token) {
+        await saveToCloud();
+      }
     });
 
     const clearBtn = $('#clearNewsFormBtn');
@@ -647,10 +977,13 @@
   }
 
   function clearNewsForm() {
-    $('#newsTitle').value = '';
-    $('#newsDate').value = '';
-    $('#newsCategory').selectedIndex = 0;
-    $('#newsContent').value = '';
+    const fields = ['newsTitle', 'newsDate', 'newsContent'];
+    fields.forEach((id) => {
+      const el = $('#' + id);
+      if (el) el.value = '';
+    });
+    const categoryEl = $('#newsCategory');
+    if (categoryEl) categoryEl.selectedIndex = 0;
     editingNewsId = null;
     const addBtn = $('#addNewsBtn');
     if (addBtn) addBtn.textContent = 'Add News';
@@ -705,7 +1038,7 @@
     $('#addNewsBtn').textContent = 'Update News';
   }
 
-  function deleteNews(id) {
+  async function deleteNews(id) {
     if (confirm('Are you sure you want to delete this news article?')) {
       newsList = newsList.filter((n) => n.id !== id);
       saveNews();
@@ -713,6 +1046,10 @@
       renderNewsPage();
       if (editingNewsId === id) clearNewsForm();
       showToast('News deleted successfully.');
+
+      if (cloudSettings.gistId && cloudSettings.token) {
+        await saveToCloud();
+      }
     }
   }
 
@@ -763,7 +1100,7 @@
   // ========================
   // Initialize
   // ========================
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     initLoader();
     initNavbar();
     initReveal();
@@ -771,5 +1108,6 @@
     initAdminPanel();
     applyConfig();
     renderNewsPage();
+    await initCloudSync();
   });
 })();

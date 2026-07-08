@@ -259,6 +259,7 @@
             <button class="admin-tab" data-tab="news">News</button>
             <button class="admin-tab" data-tab="rules">Rules</button>
             <button class="admin-tab" data-tab="owners">About / Owners</button>
+            <button class="admin-tab" data-tab="cloud">Cloud Sync</button>
             <button class="admin-tab" data-tab="data">Data</button>
           </div>
 
@@ -413,6 +414,64 @@
             <div class="form-group">
               <label for="editAboutWorld">Expansive World Card</label>
               <textarea id="editAboutWorld" data-target="aboutWorld"></textarea>
+            </div>
+          </div>
+
+          <div class="admin-section" id="tab-cloud">
+            <p style="color: var(--muted); margin-bottom: 1rem;">Sync website data and news across all devices. Choose a provider below.</p>
+
+            <div class="form-group">
+              <label for="cloudProvider">Cloud Provider</label>
+              <select id="cloudProvider">
+                <option value="github">GitHub Gist (free, recommended)</option>
+                <option value="backend">Custom Backend API</option>
+              </select>
+            </div>
+
+            <div id="githubSettings">
+              <div class="form-group">
+                <label for="githubToken">GitHub Personal Access Token</label>
+                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+                <small style="color: var(--muted); font-size: 0.8rem;">Needs <code>gist</code> scope. <a href="https://github.com/settings/tokens" target="_blank" style="color: var(--green-400);">Create token</a>. Stored only in this browser.</small>
+              </div>
+              <div class="form-group">
+                <label for="gistId">Gist ID</label>
+                <input type="text" id="gistId" placeholder="Paste existing Gist ID or create new one" />
+                <small style="color: var(--muted); font-size: 0.8rem;">Leave empty and click "Create Gist" to generate a new one.</small>
+              </div>
+            </div>
+
+            <div id="backendSettings" style="display: none;">
+              <div class="form-group">
+                <label for="backendUrl">Backend API URL</label>
+                <input type="url" id="backendUrl" placeholder="https://your-server.com/api/data" />
+                <small style="color: var(--muted); font-size: 0.8rem;">Run <code>node server.js</code> for a local backend.</small>
+              </div>
+              <div class="form-group">
+                <label for="backendToken">Backend Admin Token</label>
+                <input type="password" id="backendToken" placeholder="H&l9Jo0" />
+              </div>
+            </div>
+
+            <div class="cloud-status" id="cloudStatus">
+              <span class="cloud-dot"></span>
+              <span id="cloudStatusText">Not configured</span>
+            </div>
+
+            <div class="admin-actions">
+              <button class="btn btn-primary" id="createGistBtn">Create New Gist</button>
+              <button class="btn btn-secondary" id="loadFromCloudBtn">Load from Cloud</button>
+              <button class="btn btn-primary" id="saveToCloudBtn">Save to Cloud</button>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);">
+              <h4 style="color: var(--green-100); margin-bottom: 0.5rem; font-size: 1rem;">How it works</h4>
+              <ol style="color: var(--muted); font-size: 0.9rem; padding-left: 1.2rem; line-height: 1.7;">
+                <li>Choose <strong>GitHub Gist</strong> and create a token with <strong>gist</strong> scope.</li>
+                <li>Click <strong>Create New Gist</strong> or paste an existing Gist ID.</li>
+                <li>Click <strong>Save to Cloud</strong> to upload current settings and news.</li>
+                <li>On other devices, enter the same Gist ID and token. The site loads cloud data automatically.</li>
+              </ol>
             </div>
           </div>
 
