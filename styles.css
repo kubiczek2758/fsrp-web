@@ -815,6 +815,15 @@ section {
   background: linear-gradient(135deg, var(--discord), #7289da);
 }
 
+.owner-role.role-director {
+  background: linear-gradient(135deg, var(--accent), #f59e0b);
+  color: var(--dark);
+}
+
+.owner-role.role-deputy {
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+}
+
 /* ========================
    DEPARTMENTS
    ======================== */
