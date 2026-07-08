@@ -991,15 +991,83 @@ section {
    ======================== */
 .rules {
   background: var(--dark);
+  position: relative;
 }
 
-.rules-wrapper {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: var(--radius);
-  padding: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  max-width: 900px;
+.rules::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.25), transparent);
+}
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.75rem;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.rules-category {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  padding: 2rem;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.rules-category::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--green-500), var(--accent));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+
+.rules-category:hover {
+  transform: translateY(-8px);
+  border-color: rgba(52, 211, 153, 0.2);
+  box-shadow: var(--shadow-glow);
+}
+
+.rules-category:hover::before {
+  transform: scaleX(1);
+}
+
+.rules-category-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.rules-category-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--green-800), var(--green-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 8px 22px rgba(16, 185, 129, 0.2);
+}
+
+.rules-category h3 {
+  font-size: 1.35rem;
+  color: var(--green-50);
+  font-weight: 800;
 }
 
 .rules-list {
@@ -1009,17 +1077,14 @@ section {
 
 .rules-list li {
   position: relative;
-  padding-left: 3.75rem;
-  padding-bottom: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-left: 2.75rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   color: #cbd5e1;
+  font-size: 0.95rem;
+  line-height: 1.65;
   transition: all 0.25s;
-}
-
-.rules-list li:hover {
-  color: white;
-  padding-left: 4rem;
 }
 
 .rules-list li:last-child {
@@ -1033,23 +1098,58 @@ section {
   content: counter(rule);
   position: absolute;
   left: 0;
-  top: -4px;
-  width: 2.5rem;
-  height: 2.5rem;
-  background: linear-gradient(135deg, var(--green-600), var(--green-700));
+  top: -2px;
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, var(--green-700), var(--green-600));
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 0.95rem;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25);
+  font-size: 0.8rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
   transition: transform 0.25s;
 }
 
+.rules-list li:hover {
+  color: white;
+  padding-left: 3rem;
+}
+
 .rules-list li:hover::before {
-  transform: scale(1.1);
+  transform: scale(1.15);
+  background: linear-gradient(135deg, var(--green-500), var(--green-700));
+}
+
+.rules-final {
+  grid-column: 1 / -1;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(250, 204, 21, 0.05));
+  border-color: rgba(52, 211, 153, 0.15);
+}
+
+.rules-final .rules-category-header {
+  justify-content: center;
+}
+
+.rules-final-text {
+  color: #cbd5e1;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto 1.25rem;
+}
+
+.rules-final-text strong {
+  color: var(--green-200);
+}
+
+.rules-final-warning {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-style: italic;
 }
 
 /* ========================
@@ -1267,16 +1367,25 @@ section {
     padding: 5rem 1.25rem;
   }
 
-  .rules-wrapper {
-    padding: 2rem;
+  .rules-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .rules-category {
+    padding: 1.75rem;
+  }
+
+  .rules-final {
+    grid-column: auto;
   }
 
   .rules-list li {
-    padding-left: 3.25rem;
+    padding-left: 2.75rem;
   }
 
   .rules-list li:hover {
-    padding-left: 3.5rem;
+    padding-left: 3rem;
   }
 
   .discord-cta-grid {
