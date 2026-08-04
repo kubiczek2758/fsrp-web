@@ -1183,6 +1183,84 @@ section {
 }
 
 /* ========================
+   STAFF TABLES
+   ======================== */
+.staff-table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 3rem;
+}
+
+.staff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.staff-table th,
+.staff-table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  vertical-align: top;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  min-width: 160px;
+}
+
+.staff-table th:last-child,
+.staff-table td:last-child {
+  border-right: none;
+}
+
+.staff-table thead th {
+  background: linear-gradient(135deg, var(--green-800), var(--green-700));
+  color: white;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.staff-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.staff-table tbody tr:hover {
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.staff-table td ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.staff-table td li {
+  color: #cbd5e1;
+  line-height: 1.45;
+  padding-left: 0.85rem;
+  position: relative;
+}
+
+.staff-table td li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--green-400);
+  font-weight: 700;
+}
+
+.table-caption {
+  margin-bottom: 1rem;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+/* ========================
    DISCORD CTA
    ======================== */
 .discord-cta {
@@ -1451,5 +1529,12 @@ section {
   .footer-links {
     gap: 1.25rem;
     flex-wrap: wrap;
+  }
+
+  .staff-table th,
+  .staff-table td {
+    padding: 0.65rem 0.75rem;
+    min-width: 140px;
+    font-size: 0.85rem;
   }
 }

@@ -93,11 +93,11 @@
   }
 
   function updateActiveNavLink() {
-    const sections = ['home', 'about', 'owners', 'departments', 'applications', 'rules', 'discord'];
     const navLinks = $$('.nav-links a[href^="#"]');
     if (navLinks.length === 0) return;
 
-    let current = 'home';
+    const sections = navLinks.map((link) => link.getAttribute('href').slice(1));
+    let current = sections[0] || 'home';
     const scrollPos = window.scrollY + 150;
 
     sections.forEach((id) => {

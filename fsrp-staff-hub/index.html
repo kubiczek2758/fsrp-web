@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Florida State Roleplay Staff Hub - regulations, MOS call handling, punishments and staff guidelines." />
+  <title>Staff Hub | Florida State Roleplay</title>
+  <link rel="icon" href="../logo.png" type="image/png" />
+  <link rel="stylesheet" href="../styles.css?v=4" />
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-particles" id="loaderParticles"></div>
+    <div class="loader-aura"></div>
+    <div class="loader-ring ring-outer"></div>
+    <div class="loader-ring ring-mid"></div>
+    <div class="loader-ring ring-inner"></div>
+    <div class="loader-logo-wrap">
+      <img src="../logo.png" alt="FSRP Logo" class="loader-logo" />
+    </div>
+    <div class="loader-text">FLORIDA STATE ROLEPLAY</div>
+    <div class="loader-bar">
+      <div class="loader-progress" id="loaderProgress"></div>
+    </div>
+    <div class="loader-percent" id="loaderPercent">0%</div>
+    <div class="loader-status">Initializing experience...</div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="../index.html" class="nav-brand">
+      <img src="../logo.png" alt="FSRP Logo" />
+      <span>Florida State Roleplay</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#conduct">Conduct</a></li>
+      <li><a href="#duty">On Duty</a></li>
+      <li><a href="#mos">MOS Calls</a></li>
+      <li><a href="#punishments">Punishments</a></li>
+      <li><a href="#rp-meanings">RP Meanings</a></li>
+      <li><a href="#guidelines">Guidelines</a></li>
+      <li><a href="https://discord.gg/pcP85r22KW" target="_blank" class="nav-cta nav-discord">
+        <svg class="discord-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+        </svg>
+        Join Discord
+      </a></li>
+    </ul>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero" id="home">
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <img src="../logo.png" alt="Florida State Roleplay Logo" class="hero-logo" />
+      <h1>Staff Hub</h1>
+      <p class="hero-subtitle">Everything FSRP staff need to know — conduct, duty expectations, MOS call handling, punishments, and daily procedures.</p>
+      <div class="hero-buttons">
+        <a href="#conduct" class="btn btn-primary">Staff Guidelines</a>
+        <a href="https://discord.gg/pcP85r22KW" target="_blank" class="btn btn-discord">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
+            <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+          </svg>
+          Join Discord
+        </a>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll down</span>
+      <span>↓</span>
+    </div>
+  </header>
+
+  <!-- Staff Conduct -->
+  <section class="rules" id="conduct">
+    <div class="container">
+      <h2 class="section-title reveal">Staff Conduct</h2>
+      <p class="section-subtitle reveal">Professional standards expected from every member of the FSRP staff team.</p>
+
+      <div class="rules-grid reveal">
+        <div class="rules-category">
+          <div class="rules-category-header">
+            <div class="rules-category-icon">🛡️</div>
+            <h3>Professionalism</h3>
+          </div>
+          <ol class="rules-list">
+            <li>Represent FSRP in a professional manner at all times, both in-game and on Discord.</li>
+            <li>Treat every player, colleague, and visitor with respect, regardless of rank or history.</li>
+            <li>Never use staff powers for personal gain, revenge, entertainment, or to influence roleplay.</li>
+            <li>Keep all staff discussions, decisions, logs, and evidence confidential.</li>
+            <li>Follow the chain of command and escalate issues through the correct channels.</li>
+            <li>Remain calm and constructive, even when dealing with difficult players or situations.</li>
+          </ol>
+        </div>
+
+        <div class="rules-category">
+          <div class="rules-category-header">
+            <div class="rules-category-icon">⚖️</div>
+            <h3>Impartiality & Integrity</h3>
+          </div>
+          <ol class="rules-list">
+            <li>Base every decision on facts, server rules, and documented staff policy — not personal feelings.</li>
+            <li>Do not show favouritism toward friends, departments, or specific community members.</li>
+            <li>Recuse yourself from any case where you have a conflict of interest.</li>
+            <li>Document warnings, kicks, bans, and other major decisions so they can be reviewed.</li>
+            <li>Give players a fair opportunity to explain themselves before issuing punishments.</li>
+            <li>Accept feedback and correction from higher-ranked staff without argument.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- On Duty -->
+  <section class="departments" id="duty">
+    <div class="container">
+      <h2 class="section-title reveal">On Duty & Activity Quota</h2>
+      <p class="section-subtitle reveal">Duty expectations, the 50/50 rule, and the weekly activity requirement.</p>
+
+      <div class="rules-grid reveal">
+        <div class="rules-category">
+          <div class="rules-category-header">
+            <div class="rules-category-icon">⏱️</div>
+            <h3>Being On Duty</h3>
+          </div>
+          <ol class="rules-list">
+            <li>Be visibly active and approachable whenever you are marked as on duty.</li>
+            <li>Respond to player reports, pings, and admin calls in a timely manner.</li>
+            <li>Maintain a professional appearance and attitude while representing the staff team.</li>
+            <li>Do not remain AFK for extended periods while still marked on duty.</li>
+            <li>If you need to step away, mark yourself off duty or notify a higher-ranked staff member.</li>
+            <li>Prioritize moderation, tickets, and player safety over casual roleplay while on duty.</li>
+          </ol>
+        </div>
+
+        <div class="rules-category">
+          <div class="rules-category-header">
+            <div class="rules-category-icon">📊</div>
+            <h3>Quota & 50/50 Rule</h3>
+          </div>
+          <ol class="rules-list">
+            <li>Every staff member must complete a minimum activity quota of <strong>2 hours per week</strong>.</li>
+            <li>At least 50% of your in-server time should be spent on staff responsibilities.</li>
+            <li>Casual roleplay is allowed, but staff duties always take priority when calls or issues arise.</li>
+            <li>During events, peak hours, or high-ticket periods, focus primarily on moderation.</li>
+            <li>If you cannot meet your quota, inform a leadership member in advance.</li>
+            <li>Repeated failure to meet activity expectations may result in warnings, suspension, or demotion.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOS Calls -->
+  <section class="rules" id="mos">
+    <div class="container">
+      <h2 class="section-title reveal">Handling MOS Calls</h2>
+      <p class="section-subtitle reveal"><strong>MOS</strong> stands for <strong>Member of Staff</strong>. These are in-game or Discord calls for staff assistance.</p>
+
+      <div class="rules-grid reveal">
+        <div class="rules-category">
+          <div class="rules-category-header">
+            <div class="rules-category-icon">📞</div>
+            <h3>Response Protocol</h3>
+          </div>
+          <ol class="rules-list">
+            <li>Acknowledge the call immediately so the reporter knows assistance is on the way.</li>
+            <li>Gather context from all involved parties before making any decision.</li>
+            <li>Remain neutral, calm, and professional — do not escalate the situation emotionally.</li>
+            <li>Remove disruptive players from the active scene when necessary to protect roleplay.</li>
+            <li>Restore the scene only after the issue has been fully resolved.</li>
+            <li>If the situation is beyond your authority, escalate it to a higher-ranked staff member.</li>
+          </ol>
+        </div>
+
+        <div class="rules-category">
+          <div class="rules-category-header">
+            <div class="rules-category-icon">📝</div>
+            <h3>Documentation & Follow-Up</h3>
+          </div>
+          <ol class="rules-list">
+            <li>Log every MOS call in the designated staff channel or ticket system.</li>
+            <li>Include player names, the rule or behaviour involved, evidence, and the action taken.</li>
+            <li>Capture screenshots or clips whenever possible to support your decision.</li>
+            <li>Ask for guidance before issuing severe punishments if you are uncertain.</li>
+            <li>Follow up on ongoing reports to ensure the issue does not continue.</li>
+            <li>Keep MOS logs factual and free from personal opinions or bias.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Punishments -->
+  <section class="departments" id="punishments">
+    <div class="container">
+      <h2 class="section-title reveal">Punishments for Actions</h2>
+      <p class="section-subtitle reveal">A clear framework for staff discipline and in-game ERLC punishments.</p>
+
+      <h3 class="table-caption reveal">Staff Punishments</h3>
+      <div class="staff-table-wrapper reveal">
+        <table class="staff-table">
+          <thead>
+            <tr>
+              <th>Verbal Warning</th>
+              <th>Warning</th>
+              <th>Strike</th>
+              <th>Demotion</th>
+              <th>Suspension</th>
+              <th>Termination</th>
+              <th>Staff Blacklist</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><ul><li>Failure to Follow Ticket Procedures</li></ul></td>
+              <td><ul><li>SPaG (Spelling, Punctuation and Grammar)</li></ul></td>
+              <td><ul><li>Unprofessionalism</li></ul></td>
+              <td><ul><li>Inactivity</li></ul></td>
+              <td><ul><li>Impersonation or Lying</li></ul></td>
+              <td><ul><li>Mass Inactivity</li></ul></td>
+              <td><ul><li>Leaking Staff Informations</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Unauthorized Use of Staff Vehicles</li></ul></td>
+              <td><ul><li>Toxic Behaviour</li></ul></td>
+              <td><ul><li>Permissions Abuse</li></ul></td>
+              <td><ul><li>Misleading Staff Members</li></ul></td>
+              <td><ul><li>Mass Permissions Abuse</li></ul></td>
+              <td><ul><li>Threatening Staff or Players</li></ul></td>
+              <td><ul><li>Threatening Staff or Players</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Breaking RP Immersion</li></ul></td>
+              <td><ul><li>Unauthorized Events</li></ul></td>
+              <td><ul><li>Mass Toxic Behaviour</li></ul></td>
+              <td><ul><li>Unapproved Server Restarts</li></ul></td>
+              <td><ul><li>Unauthorized System Changes</li></ul></td>
+              <td><ul><li>Attempting to Manipulate Player Reports</li></ul></td>
+              <td><ul><li>Sharing Internal Documents</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Unprofessional Behaviour in VC</li></ul></td>
+              <td><ul><li>Misleading Players</li></ul></td>
+              <td><ul><li>Ignoring Chain of Command</li></ul></td>
+              <td><ul><li>Failure to Follow Staff Conduct Guidelines</li></ul></td>
+              <td><ul><li>Harassment / Discrimination</li></ul></td>
+              <td><ul><li>Using All or Others Commands</li></ul></td>
+              <td><ul><li>Using Staff Role for Personal Gain</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Over-Punishing Players</li></ul></td>
+              <td><ul><li>Inappropriate Behaviour</li></ul></td>
+              <td><ul><li>Failure to Log Punishments</li></ul></td>
+              <td><ul><li>Shift Farming</li></ul></td>
+              <td><ul><li>Attempting to Hide Evidence</li></ul></td>
+              <td><ul><li>Favoritism Toward Friends</li></ul></td>
+              <td><ul><li>Favoritism Toward Friends</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Under-Punishing Players</li></ul></td>
+              <td><ul><li>Unauthorized Player Teleports</li></ul></td>
+              <td><ul><li>False Punishments</li></ul></td>
+              <td></td>
+              <td><ul><li>Spreading Misinformation Internally</li></ul></td>
+              <td></td>
+              <td><ul><li>Using Staff Rank to Threaten Players</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Ignoring Staff Tickets</li></ul></td>
+              <td><ul><li>Neglecting Player Reports</li></ul></td>
+              <td><ul><li>Excessive AFK on Duty</li></ul></td>
+              <td></td>
+              <td><ul><li>Unapproved Server Shutdowns</li></ul></td>
+              <td></td>
+              <td><ul><li>Underage (&gt;13)</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Unprofessional Behaviour in Public Channels</li></ul></td>
+              <td><ul><li>Misuse of Logs or Evidence</li></ul></td>
+              <td><ul><li>Unapproved Staff Promotions</li></ul></td>
+              <td></td>
+              <td><ul><li>Providing Incorrect Training</li></ul></td>
+              <td></td>
+              <td><ul><li>Trolling</li></ul></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><ul><li>Overstepping Rank Permissions</li></ul></td>
+              <td><ul><li>Unapproved Staff Demotions</li></ul></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><ul><li>Corruption</li></ul></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><ul><li>Disrespecting Higher Ranks</li></ul></td>
+              <td><ul><li>Providing False Evidence</li></ul></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td><ul><li>Ignoring Staff Ping Requirements</li></ul></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td><ul><li>Not Using 4 Letter Commands</li></ul></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="table-caption reveal">ERLC Punishments</h3>
+      <div class="staff-table-wrapper reveal">
+        <table class="staff-table">
+          <thead>
+            <tr>
+              <th>Verbal Warning</th>
+              <th>Warning</th>
+              <th>Kick</th>
+              <th>Temp Ban</th>
+              <th>Bolo Ban</th>
+              <th>Ban</th>
+              <th>Banned RPs</th>
+              <th>Required Perms to RPs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><ul><li>Cuff Rush</li></ul></td>
+              <td><ul><li>VDM (Vehicle Death Match)</li></ul></td>
+              <td><ul><li>NLR (New Life Rule)</li></ul></td>
+              <td><ul><li>FRP (Fail Roleplay)</li></ul></td>
+              <td><ul><li>Having 3+ warnings</li></ul></td>
+              <td><ul><li>Trolling</li></ul></td>
+              <td><ul><li>ICE Roleplay</li></ul></td>
+              <td><ul><li>Hostage Roleplay</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Tool Abuse</li></ul></td>
+              <td><ul><li>RDM (Random Death Match)</li></ul></td>
+              <td><ul><li>Fear Roleplay</li></ul></td>
+              <td><ul><li>Mass VDM</li></ul></td>
+              <td><ul><li>Having 2+ kicks</li></ul></td>
+              <td><ul><li>Mass Staff RDM</li></ul></td>
+              <td><ul><li>Hitman Roleplay</li></ul></td>
+              <td><ul><li>Border Roleplay</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Not Using Livery</li></ul></td>
+              <td><ul><li>False Mod Calls</li></ul></td>
+              <td><ul><li>Staff RDM</li></ul></td>
+              <td><ul><li>Mass RDM</li></ul></td>
+              <td></td>
+              <td><ul><li>Mass Staff VDM</li></ul></td>
+              <td><ul><li>Animal Abuse Roleplay</li></ul></td>
+              <td><ul><li>DOT Roadworks</li></ul></td>
+            </tr>
+            <tr>
+              <td><ul><li>Wrong Uniform</li></ul></td>
+              <td><ul><li>GTA Driving</li></ul></td>
+              <td><ul><li>Staff VDM</li></ul></td>
+              <td><ul><li>Staff Evasion</li></ul></td>
+              <td></td>
+              <td><ul><li>Having 3+ bolos</li></ul></td>
+              <td><ul><li>Sexual Roleplay</li></ul></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><ul><li>Unrealistic Avatar</li></ul></td>
+              <td><ul><li>Disturbing a Mod Scene</li></ul></td>
+              <td><ul><li>Cop Baiting</li></ul></td>
+              <td><ul><li>NSFW</li></ul></td>
+              <td></td>
+              <td><ul><li>RTAP (Respawn To Avoid Punishment)</li></ul></td>
+              <td><ul><li>Political Context</li></ul></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td><ul><li>Staff Disrespect</li></ul></td>
+              <td><ul><li>Staff Impersonating</li></ul></td>
+              <td></td>
+              <td><ul><li>LTAP (Leave To Avoid Punishment)</li></ul></td>
+              <td><ul><li>Racism Roleplay</li></ul></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td><ul><li>Auto Jailing</li></ul></td>
+              <td></td>
+              <td></td>
+              <td><ul><li>Breaking Roblox ToS</li></ul></td>
+              <td><ul><li>Terrorism Roleplay</li></ul></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td><ul><li>NITRP (No Intent To Roleplay)</li></ul></td>
+              <td></td>
+              <td></td>
+              <td><ul><li>Raiding</li></ul></td>
+              <td><ul><li>Drugs Roleplay</li></ul></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td><ul><li>Refusing To Join Discord</li></ul></td>
+              <td></td>
+              <td></td>
+              <td><ul><li>Bug Abuse</li></ul></td>
+              <td><ul><li>Recreating Real Events</li></ul></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- RP Meanings -->
+  <section class="rules" id="rp-meanings">
+    <div class="container">
+      <h2 class="section-title reveal">RP Meanings</h2>
+      <p class="section-subtitle reveal">Common roleplay abbreviations and terms used during moderation and in-game calls.</p>
+
+      <div class="staff-table-wrapper reveal">
+        <table class="staff-table">
+          <thead>
+            <tr>
+              <th>Abbreviation</th>
+              <th>Meaning</th>
+              <th>Definition</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>AA</strong></td>
+              <td>Admin Abuse</td>
+              <td>Staff using powers unfairly or to win RP scenes.</td>
+            </tr>
+            <tr>
+              <td><strong>AOP</strong></td>
+              <td>Area of Play</td>
+              <td>The active, allowed RP area chosen by staff. All roleplay must stay inside the current AOP unless staff says otherwise.</td>
+            </tr>
+            <tr>
+              <td>—</td>
+              <td>Cop Baiting</td>
+              <td>When a player intentionally tries to provoke police into chasing, arresting, or interacting with them without any real RP reason.</td>
+            </tr>
+            <tr>
+              <td>—</td>
+              <td>Fear Roleplay</td>
+              <td>You must show fear when threatened by weapons or danger.</td>
+            </tr>
+            <tr>
+              <td><strong>FRP</strong></td>
+              <td>Fail Roleplay</td>
+              <td>Unrealistic actions, ignoring injuries, breaking immersion.</td>
+            </tr>
+            <tr>
+              <td><strong>GTAD</strong></td>
+              <td>GTA Driving</td>
+              <td>Driving unrealistically, like in GTA, instead of serious RP.</td>
+            </tr>
+            <tr>
+              <td><strong>IC</strong></td>
+              <td>In Character</td>
+              <td>Everything your character says, does, or experiences inside the RP world.</td>
+            </tr>
+            <tr>
+              <td><strong>LTAA</strong></td>
+              <td>Leaving To Avoid Arrest</td>
+              <td>Disconnecting during or right before an arrest to avoid consequences.</td>
+            </tr>
+            <tr>
+              <td><strong>LTAP</strong></td>
+              <td>Leaving To Avoid Punishment</td>
+              <td>Leaving the game to avoid staff or RP consequences.</td>
+            </tr>
+            <tr>
+              <td><strong>MG</strong></td>
+              <td>Metagaming</td>
+              <td>Using OOC information for IC advantage.</td>
+            </tr>
+            <tr>
+              <td>—</td>
+              <td>Mod Scene Interference</td>
+              <td>Entering or disrupting active moderator scenes.</td>
+            </tr>
+            <tr>
+              <td><strong>NITRP</strong></td>
+              <td>No Intent To Roleplay</td>
+              <td>Trolling, refusing to RP, or acting with no RP purpose.</td>
+            </tr>
+            <tr>
+              <td><strong>NLR</strong></td>
+              <td>New Life Rule</td>
+              <td>After death, you forget all events leading up to it and cannot return to the scene.</td>
+            </tr>
+            <tr>
+              <td><strong>NVL</strong></td>
+              <td>No Value of Life</td>
+              <td>Acting like your character doesn't care about dying.</td>
+            </tr>
+            <tr>
+              <td><strong>OOC</strong></td>
+              <td>Out of Character</td>
+              <td>Real-life communication, not part of RP.</td>
+            </tr>
+            <tr>
+              <td><strong>PG</strong></td>
+              <td>Powergaming</td>
+              <td>Forcing actions on others or performing impossible actions.</td>
+            </tr>
+            <tr>
+              <td><strong>RDM</strong></td>
+              <td>Random Deathmatch</td>
+              <td>Killing without valid RP reason.</td>
+            </tr>
+            <tr>
+              <td><strong>RTAP</strong></td>
+              <td>Respawning To Avoid Punishment</td>
+              <td>Respawning in the game to avoid staff or RP consequences.</td>
+            </tr>
+            <tr>
+              <td><strong>SE</strong></td>
+              <td>Staff Evasion</td>
+              <td>Running from staff, hiding, or switching servers to avoid moderation.</td>
+            </tr>
+            <tr>
+              <td><strong>SPaG</strong></td>
+              <td>Spelling, Punctuation & Grammar</td>
+              <td>Keeping clear, readable communication.</td>
+            </tr>
+            <tr>
+              <td>—</td>
+              <td>Staff Disrespect</td>
+              <td>Showing disrespect toward staff during moderation or communication.</td>
+            </tr>
+            <tr>
+              <td>—</td>
+              <td>Staff Impersonation</td>
+              <td>Pretending to be staff, moderators, or admins when you are not.</td>
+            </tr>
+            <tr>
+              <td><strong>TA</strong></td>
+              <td>Tool Abuse</td>
+              <td>Using tools, commands, or game mechanics in unintended ways to gain advantage or disrupt RP.</td>
+            </tr>
+            <tr>
+              <td>—</td>
+              <td>Trolling</td>
+              <td>Behaviour intended to disrupt RP, annoy players, or break immersion.</td>
+            </tr>
+            <tr>
+              <td>—</td>
+              <td>Uncooperating With Staff</td>
+              <td>Refusing to follow staff instructions or making moderation harder.</td>
+            </tr>
+            <tr>
+              <td><strong>VDM</strong></td>
+              <td>Vehicle Deathmatch</td>
+              <td>Using a vehicle to harm players without RP justification.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- General Guidelines -->
+  <section class="applications" id="guidelines">
+    <div class="container">
+      <h2 class="section-title reveal">General Staff Guidelines</h2>
+      <p class="section-subtitle reveal">Daily procedures and reminders that keep the staff team effective and unified.</p>
+
+      <div class="applications-grid">
+        <div class="application-card reveal">
+          <div class="app-icon">🎙️</div>
+          <h3>Communication</h3>
+          <p>Use the correct channels for reports, questions, and department coordination. Avoid unnecessary pings and maintain a respectful, professional tone at all times.</p>
+        </div>
+        <div class="application-card reveal">
+          <div class="app-icon">🎓</div>
+          <h3>Training & Development</h3>
+          <p>Attend scheduled staff meetings and training sessions. Stay informed about rule updates, new procedures, and changes to server policy.</p>
+        </div>
+        <div class="application-card reveal">
+          <div class="app-icon">🤝</div>
+          <h3>Teamwork</h3>
+          <p>Support your fellow staff members, cover for absences when possible, and escalate issues through the proper chain of command.</p>
+        </div>
+        <div class="application-card reveal">
+          <div class="app-icon">🔒</div>
+          <h3>Confidentiality</h3>
+          <p>Never share staff-only information, player reports, internal discussions, logs, or evidence outside of authorised staff channels.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discord CTA -->
+  <section class="discord-cta" id="discord">
+    <div class="container">
+      <div class="discord-cta-grid">
+        <div class="discord-cta-content reveal">
+          <h2>Need Backup?</h2>
+          <p>If you are unsure about a call, punishment, or policy, reach out to the leadership team on Discord.</p>
+          <a href="https://discord.gg/pcP85r22KW" target="_blank" class="btn btn-discord">Open Discord</a>
+        </div>
+
+        <div class="discord-widget-wrapper reveal">
+          <div class="discord-widget-card">
+            <h3>Online Members</h3>
+            <iframe
+              src="https://discord.com/widget?id=1523284049345646674&theme=dark"
+              width="350"
+              height="500"
+              allowtransparency="true"
+              frameborder="0"
+              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <ul class="footer-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="#home">Staff Hub</a></li>
+      <li><a href="../index.html#rules">Rules</a></li>
+      <li><a href="https://discord.gg/pcP85r22KW" target="_blank">Discord</a></li>
+    </ul>
+    <p>Website made by <span class="credit-name">Kubiczek2758</span></p>
+  </footer>
+
+  <script src="../app.js?v=4"></script>
+</body>
+</html>
